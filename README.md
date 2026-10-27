@@ -147,7 +147,7 @@ Base URL: `http://localhost:5000/api/api`
   - `sort` - Sort by price: `price_asc` or `price_desc`
   - `category` - Filter by category
   - `tags` - Filter by tags (comma-separated)
-- **Response:** Paginated course summaries without lesson syllabus
+- **Response:** Paginated course summaries without lesson syllabus; authenticated admins receive full syllabus details
 
 #### Get Course by ID
 - **GET** `/api/courses/:id`

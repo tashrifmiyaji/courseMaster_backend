@@ -3,7 +3,7 @@
 const Course = require("../models/Course");
 const Enrollment = require("../models/Enrollment");
 
-const getCourses = async (query) => {
+const getCourses = async (query, user) => {
   const {
     page = 1,
     limit = 8,
@@ -43,9 +43,13 @@ const getCourses = async (query) => {
 
   const skip = (pageNum - 1) * limitNum;
 
+  const courseQuery = Course.find(filter);
+  if (user?.role !== "admin") {
+    courseQuery.select("-syllabus");
+  }
+
   const [courses, total] = await Promise.all([
-    Course.find(filter)
-      .select("-syllabus")
+    courseQuery
       .sort(sortObj)
       .skip(skip)
       .limit(limitNum),

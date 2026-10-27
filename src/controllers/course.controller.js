@@ -7,7 +7,7 @@ const getCourses = async (req, res) => {
   try {
     // Ensure DB connection before processing request (for serverless)
     await connectDB();
-    const data = await courseService.getCourses(req.query);
+    const data = await courseService.getCourses(req.query, req.user);
     res.json(data);
   } catch (err) {
     console.error("Get courses error:", err.message);
