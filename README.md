@@ -110,13 +110,14 @@ Base URL: `http://localhost:5000/api/api`
     "name": "John Doe",
     "email": "john@example.com",
     "password": "password123",
+    "role": "student",
     "adminKey": "optional-admin-key" 
   }
   ```
 - **Response:** User object with token
 - **Note:** 
   - By default, users are registered as "student"
-  - To register as "admin", provide a valid `adminKey` that matches `ADMIN_REGISTRATION_KEY` in environment variables
+  - To register as "admin", set `role` to `"admin"` and provide a valid `adminKey` that matches `ADMIN_REGISTRATION_KEY` in environment variables
   - If invalid admin key is provided, registration will fail
 
 #### Login
@@ -405,4 +406,3 @@ The backend is deployed on **Vercel**. Make sure to set all environment variable
 - Development server runs on `http://localhost:5000` (default)
 - Uses `nodemon` for auto-restart during development
 - MongoDB connection is handled via Mongoose
-

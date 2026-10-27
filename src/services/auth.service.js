@@ -9,14 +9,21 @@ const register = async ({ name, email, password, role, adminKey }) => {
   const exists = await User.findOne({ email });
   if (exists) throw new Error("Email already registered");
 
+  const expectedAdminKey = process.env.ADMIN_REGISTRATION_KEY;
+  if (adminKey !== undefined && adminKey !== expectedAdminKey) {
+    throw new Error("Invalid admin registration key");
+  }
+  if (role === "admin" && (!expectedAdminKey || adminKey !== expectedAdminKey)) {
+    throw new Error("Valid admin registration key required");
+  }
+
   const passwordHash = await bcrypt.hash(password, 10);
 
-  // Code-12 bug: user can pass role directly in payload without adminKey verification
   const user = await User.create({
     name,
     email,
     passwordHash,
-    role: role || "student",
+    role: role === "admin" ? "admin" : "student",
   });
 
   const token = generateToken({ id: user._id, role: user.role });
