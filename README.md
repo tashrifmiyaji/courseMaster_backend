@@ -198,6 +198,7 @@ Base URL: `http://localhost:5000/api/api`
     "answerType": "text" // or "link"
   }
   ```
+- Submission is accepted only when the student is enrolled and the lesson belongs to the course and has an assignment prompt.
 - **Response:** Assignment submission object
 
 #### Get My Submissions

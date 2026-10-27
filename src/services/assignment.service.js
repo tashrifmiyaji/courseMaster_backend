@@ -1,4 +1,5 @@
 const AssignmentSubmission = require("../models/AssignmentSubmission");
+const Course = require("../models/Course");
 const Enrollment = require("../models/Enrollment");
 
 const submitAssignment = async (studentId, payload) => {
@@ -7,6 +8,16 @@ const submitAssignment = async (studentId, payload) => {
   // ensure student enrolled
   const enrolled = await Enrollment.findOne({ student: studentId, course: courseId });
   if (!enrolled) throw new Error("You are not enrolled in this course");
+
+  const course = await Course.findById(courseId);
+  if (!course) throw new Error("Course not found");
+
+  const lesson = course.syllabus
+    .flatMap((module) => module.lessons)
+    .find((item) => String(item._id) === String(lessonId));
+  if (!lesson || !lesson.assignmentPrompt) {
+    throw new Error("Assignment not found for this lesson");
+  }
 
   const submission = await AssignmentSubmission.create({
     student: studentId,
