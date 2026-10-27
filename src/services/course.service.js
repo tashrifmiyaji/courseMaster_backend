@@ -68,7 +68,18 @@ const getCourseById = async (id, user) => {
 
   const course = await Course.findById(id).select(includeSyllabus ? "" : "-syllabus");
   if (!course) throw new Error("Course not found");
-  return course;
+
+  const courseData = course.toObject();
+  if (user?.role !== "admin" && courseData.syllabus) {
+    courseData.syllabus = courseData.syllabus.map((module) => ({
+      ...module,
+      lessons: module.lessons.map((lesson) => ({
+        ...lesson,
+        quiz: lesson.quiz.map(({ correctIndex, ...question }) => question),
+      })),
+    }));
+  }
+  return courseData;
 };
 
 module.exports = { getCourses, getCourseById };

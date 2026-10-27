@@ -64,6 +64,7 @@ const submitQuiz = async (studentId, payload) => {
     total,
     score,
     percent,
+    correctAnswers: quiz.map((question) => question.correctIndex),
     createdAt: submission.createdAt,
   };
 };
@@ -73,9 +74,25 @@ const getMyQuizSubmissions = async (studentId, courseId = null) => {
   const filter = { student: studentId };
   if (courseId) filter.course = courseId;
 
-  return QuizSubmission.find(filter)
-    .populate("course", "title")
+  const submissions = await QuizSubmission.find(filter)
+    .populate("course", "title syllabus")
     .sort({ createdAt: -1 });
+
+  return submissions.map((submission) => {
+    const submissionData = submission.toObject();
+    const lesson = submission.course?.syllabus
+      .flatMap((module) => module.lessons)
+      .find((item) => String(item._id) === String(submission.lessonId));
+
+    submissionData.correctAnswers = lesson?.quiz.map((question) => question.correctIndex) || [];
+    if (submissionData.course) {
+      submissionData.course = {
+        _id: submissionData.course._id,
+        title: submissionData.course.title,
+      };
+    }
+    return submissionData;
+  });
 };
 
 // Get quiz statistics for a course

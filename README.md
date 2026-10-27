@@ -221,11 +221,14 @@ Base URL: `http://localhost:5000/api/api`
 - **Response:**
   ```json
   {
+    "_id": "submission-id",
     "total": 4,
     "score": 3,
-    "percent": 75
+    "percent": 75,
+    "correctAnswers": [0, 1, 2, 0]
   }
   ```
+- Correct answers are omitted from course lesson data and returned only after the student submits the quiz.
 
 ### Admin Endpoints (Protected - Admin Only)
 
