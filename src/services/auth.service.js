@@ -42,6 +42,7 @@ const register = async ({ name, email, password, role, adminKey }) => {
 const login = async ({ email, password }) => {
   const user = await User.findOne({ email });
   if (!user) throw new Error("Invalid email or password");
+  if (user.isBanned) throw new Error("This account has been banned");
 
   const match = await bcrypt.compare(password, user.passwordHash);
   if (!match) throw new Error("Invalid email or password");
