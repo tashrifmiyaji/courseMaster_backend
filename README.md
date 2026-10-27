@@ -147,11 +147,13 @@ Base URL: `http://localhost:5000/api/api`
   - `sort` - Sort by price: `price_asc` or `price_desc`
   - `category` - Filter by category
   - `tags` - Filter by tags (comma-separated)
-- **Response:** Paginated courses list
+- **Response:** Paginated course summaries without lesson syllabus
 
 #### Get Course by ID
 - **GET** `/api/courses/:id`
-- **Response:** Course object with full details
+- **Response:** Public course details without lesson syllabus
+- **Headers (optional):** `Authorization: Bearer <token>`
+- An authenticated admin or enrolled student receives the full syllabus. Other users receive course details without lesson content.
 
 ### Enrollment Endpoints (Protected - Student)
 

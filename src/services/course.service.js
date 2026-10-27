@@ -1,6 +1,7 @@
 // service to handle course-related operations
 
 const Course = require("../models/Course");
+const Enrollment = require("../models/Enrollment");
 
 const getCourses = async (query) => {
   const {
@@ -44,6 +45,7 @@ const getCourses = async (query) => {
 
   const [courses, total] = await Promise.all([
     Course.find(filter)
+      .select("-syllabus")
       .sort(sortObj)
       .skip(skip)
       .limit(limitNum),
@@ -58,8 +60,13 @@ const getCourses = async (query) => {
   };
 };
 
-const getCourseById = async (id) => {
-  const course = await Course.findById(id);
+const getCourseById = async (id, user) => {
+  const isEnrolled = user && user.role !== "admin"
+    ? await Enrollment.exists({ student: user.id, course: id })
+    : false;
+  const includeSyllabus = user?.role === "admin" || isEnrolled;
+
+  const course = await Course.findById(id).select(includeSyllabus ? "" : "-syllabus");
   if (!course) throw new Error("Course not found");
   return course;
 };
