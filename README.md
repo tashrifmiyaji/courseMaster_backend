@@ -182,6 +182,7 @@ Base URL: `http://localhost:5000/api/api`
     "lessonId": "lesson-id-here"
   }
   ```
+- The lesson must belong to the course associated with the enrollment.
 - **Response:** Updated enrollment object
 
 ### Assignment Endpoints (Protected - Student)

@@ -39,6 +39,14 @@ const completeLesson = async (studentId, enrollId, lessonId) => {
   });
   if (!enrollment) throw new Error("Enrollment not found");
 
+  const course = await Course.findById(enrollment.course);
+  if (!course) throw new Error("Course not found");
+
+  const lessonExists = course.syllabus.some((module) =>
+    module.lessons.some((lesson) => String(lesson._id) === String(lessonId))
+  );
+  if (!lessonExists) throw new Error("Lesson not found in this course");
+
   // avoid duplicates
   const alreadyDone = enrollment.progress.completedLessons
     .map(String)
@@ -49,7 +57,6 @@ const completeLesson = async (studentId, enrollId, lessonId) => {
   }
 
   // calculate percent
-  const course = await Course.findById(enrollment.course);
   const totalLessons = course.syllabus.reduce(
     (sum, mod) => sum + mod.lessons.length,
     0
