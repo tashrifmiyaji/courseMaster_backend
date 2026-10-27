@@ -200,6 +200,7 @@ Base URL: `http://localhost:5000/api/api`
   }
   ```
 - Submission is accepted only when the student is enrolled and the lesson belongs to the course and has an assignment prompt.
+- Students can submit each lesson assignment only once.
 - **Response:** Assignment submission object
 
 #### Get My Submissions

@@ -19,6 +19,13 @@ const submitAssignment = async (studentId, payload) => {
     throw new Error("Assignment not found for this lesson");
   }
 
+  const existingSubmission = await AssignmentSubmission.findOne({
+    student: studentId,
+    course: courseId,
+    lessonId,
+  });
+  if (existingSubmission) throw new Error("You have already submitted this assignment");
+
   const submission = await AssignmentSubmission.create({
     student: studentId,
     course: courseId,
