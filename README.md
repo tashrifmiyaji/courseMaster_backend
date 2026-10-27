@@ -201,6 +201,7 @@ Base URL: `http://localhost:5000/api/api`
   ```
 - Submission is accepted only when the student is enrolled and the lesson belongs to the course and has an assignment prompt.
 - Students can submit each lesson assignment only once.
+- A unique database index enforces this rule even for simultaneous requests. Remove any existing duplicate submissions before starting the server so the index can be created.
 - **Response:** Assignment submission object
 
 #### Get My Submissions
