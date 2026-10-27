@@ -76,13 +76,24 @@ const getAssignments = async (query = {}) => {
 const reviewAssignment = async (id, payload, adminId) => {
   const { reviewNotes, grade, status } = payload;
 
+  if (typeof grade !== "undefined" &&
+    (typeof grade !== "number" || !Number.isFinite(grade) || grade < 0 || grade > 100)) {
+    throw new Error("Grade must be a number between 0 and 100");
+  }
+  if (typeof status !== "undefined" && !["submitted", "reviewed"].includes(status)) {
+    throw new Error("Invalid assignment status");
+  }
+
   const update = {};
   if (typeof status !== "undefined") update.status = status;
   if (typeof reviewNotes !== "undefined") update.reviewNotes = reviewNotes;
   if (typeof grade !== "undefined") update.grade = grade;
   if (adminId) update.reviewer = adminId;
 
-  const submission = await AssignmentSubmission.findByIdAndUpdate(id, update, { new: true })
+  const submission = await AssignmentSubmission.findByIdAndUpdate(id, update, {
+    new: true,
+    runValidators: true,
+  })
     .populate("student", "name email")
     .populate("course", "title")
     .populate("reviewer", "name");

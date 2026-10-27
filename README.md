@@ -281,6 +281,7 @@ Base URL: `http://localhost:5000/api/api`
     "grade": 95
   }
   ```
+- `grade` must be a number from 0 to 100. `status` must be `submitted` or `reviewed`.
 - **Response:** Updated assignment submission
 
 ## Data Models
